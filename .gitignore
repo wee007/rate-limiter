@@ -14,11 +14,9 @@
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
-!/log/.keep
-!/tmp/.keep
 
-/node_modules
-/yarn-error.log
+# Ignore coverage files
+/coverage/*
 
 .byebug_history
 .keep
