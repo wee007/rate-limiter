@@ -3,22 +3,13 @@
 class HomeController < ApplicationController
   include RedisConcern
 
-  # Rate Limiter.
-  #
   def index
-    # If exceeded rate limit and within retry period
-    # return status code 429 with a message
     if within_retry_period?
       result_message = retry_message_with(retry_period: calculate_elapsed_time)
       status = :too_many_requests
     else
-      # If last request time has elapsed
-      # reset stored values
       reset_stored_values(calculate_request_time) if request_period_elapsed?
 
-      # If exceeded rate limit
-      # set a retry period and return status code 429 with a message
-      # otherwise return status code 200
       if @last_request_count > ENV["REQUEST_LIMIT"].to_i
         @redis.set("last_retry_time", calculate_retry_time)
         @redis.set("last_request_count", 0)
